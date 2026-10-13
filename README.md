@@ -12,9 +12,9 @@ A patch that makes the PC version of BioShock Infinite run properly on modern ha
   <a href="LICENSE"><img src="https://img.shields.io/github/license/literalynn/InfinitePatch?style=flat-square&color=16324a" alt="MIT license" /></a>
 </p>
 
-Borderless fullscreen without alt-tab lag, no more crash after the intro videos, intro videos skipped, frame cap, VRR, UI scaling, wider FOV and more. Every option can be turned on or off in a simple `.ini` file.
+Borderless fullscreen without alt-tab lag, no more crash after the intro videos, no more framerate drops with high polling rate mice, constant mouse sensitivity while sprinting, intro videos skipped, frame cap, VRR, UI scaling, wider FOV and more. Every option can be turned on or off in a simple `.ini` file.
 
-InfinitePatch does **not** modify any game file: no DLL, no injection, no patched `.exe`. It only edits the game's settings files and the Windows per-game graphics setting, and it can be fully uninstalled.
+InfinitePatch does **not** modify any game file. It edits the game's settings files and the Windows per-game graphics setting, and adds one small DLL next to the game (`dinput8.dll`) for the fixes that settings can't do. Everything can be turned off and fully uninstalled.
 
 ## How to Install
 
@@ -23,7 +23,7 @@ InfinitePatch does **not** modify any game file: no DLL, no injection, no patche
 >
 > 1. Launch the game once, then close it. It creates its settings files on first launch.
 > 2. **Download**: [InfinitePatch.zip](https://github.com/literalynn/InfinitePatch/releases/latest/download/InfinitePatch.zip)
-> 3. Extract the contents of the zip into the game's **main folder**, the one that contains the `Binaries` and `XGame` folders.
+> 3. Extract the contents of the zip into the game's **main folder**, the one that contains the `Binaries` and `XGame` folders. This also puts `dinput8.dll` in `Binaries\Win32`.
 > 4. Double-click **`Install.bat`**.
 >
 > Directory path for Steam:
@@ -32,12 +32,15 @@ InfinitePatch does **not** modify any game file: no DLL, no injection, no patche
 > [!IMPORTANT]
 > Run `Install.bat` again every time you edit `InfinitePatch.ini`, and after the game is updated or verified by Steam: the game rebuilds its settings files when its own files change.
 
+> [!WARNING]
+> Other mods that also install a `dinput8.dll` in `Binaries\Win32` can't be used at the same time as InfinitePatch's native fixes. `Install.bat` tells you when that's the case.
+
 > [!TIP]
 > If Windows shows a security warning when you run `Install.bat`, click **Run** (or **More info** → **Run anyway**). To avoid it, right-click the zip → **Properties** → tick **Unblock** before extracting.
 
 ## How to Uninstall
 
-Double-click **`Uninstall.bat`**. It restores the settings files and the Windows graphics setting saved during the first install. You can then delete the InfinitePatch files from the game folder.
+Double-click **`Uninstall.bat`**. It removes `dinput8.dll` and restores the settings files and the Windows graphics setting saved during the first install. You can then delete the remaining InfinitePatch files from the game folder.
 
 Options you changed in the game's menus after installing the patch are reverted too.
 
@@ -53,6 +56,8 @@ Every option lives in `InfinitePatch.ini`, with a description and the accepted v
 | Display | `MaxFPS` | `0` | `0` no limit, or a framerate limit |
 | Display | `UIScale` | `1.0` | `0.0` vanilla to `1.0` full scaling with resolution |
 | Display | `FOVSliderRange` | `50` | `15` vanilla, up to `100` |
+| Fixes | `FixHighPollingRate` | `1` | `0` off, `1` on |
+| Fixes | `FixSprintSensitivity` | `1` | `0` off, `1` on |
 | Fixes | `ForceDedicatedGPU` | `1` | `0` off, `1` on |
 | Fixes | `WindowedOptimizations` | `1` | `0` off, `1` on |
 | General | `SkipIntro2K`, `SkipIntroIrrational`, `SkipIntroUnreal`, `SkipIntroAMD` | `1` | `0` play the video, `1` skip it |
@@ -62,7 +67,27 @@ Every option lives in `InfinitePatch.ini`, with a description and the accepted v
 
 Invalid values are rejected with a clear message and nothing is changed.
 
+`FixHighPollingRate` and `FixSprintSensitivity` are read by `dinput8.dll` every time the game starts, so they apply even without running `Install.bat` again.
+
 # Features
+
+## High Polling Rate Mouse Fix
+
+With a 1000 Hz to 8000 Hz gaming mouse, the framerate collapses as soon as you turn the camera quickly: in testing with a 4000 Hz mouse, from 400 FPS down to 70-200 FPS, with frames taking up to 230 ms.
+
+Windows sends the game a mouse move message every time the cursor has moved since the game last checked its messages. A fast, high polling rate mouse moves it between every single message, so the game gets hundreds of mouse moves per frame and handles each one. InfinitePatch lets a single mouse move through per frame, the most recent one, as in the [fix the Godot engine made](https://godotengine.org/article/fixing-high-polling-rate-mice-on-windows/) for the same problem. The camera movement itself is read with Raw Input on a separate thread instead of DirectInput, and handed to the game in a few events per frame.
+
+With the fix, the same 4000 Hz mouse turning the camera fast stays around 400 FPS, with frames under 7 ms.
+
+Disable with `FixHighPollingRate = 0` in `InfinitePatch.ini`.
+
+## Sprint Sensitivity Fix
+
+While you sprint, the game cuts the mouse sensitivity: horizontal turning drops to half speed and vertical to 70%, then goes back to normal when the sprint ends. InfinitePatch compensates mouse movement for exactly that amount while a sprint is on, so the camera turns the same whether you walk or sprint. Aiming and everything else keep the game's own sensitivity.
+
+Disable with `FixSprintSensitivity = 0` in `InfinitePatch.ini`.
+
+> **Note**: This fix uses addresses inside the game's executable and only works with the current Steam version (May 2022 build). On any other version it turns itself off.
 
 ## Borderless Fullscreen
 
@@ -141,7 +166,11 @@ All of them keep the game's own setting by default (`-1` or `0`).
 
 ## How It Works
 
-InfinitePatch is a PowerShell script (`InfinitePatch.ps1`), run by `Install.bat` and `Uninstall.bat`. It reads `InfinitePatch.ini` and edits:
+InfinitePatch has two parts.
+
+**`dinput8.dll`** sits in `Binaries\Win32`, where the game loads it in place of the Windows DirectInput library, which it forwards everything to. It reads `InfinitePatch.ini` when the game starts and applies the native fixes in memory only: the mouse handling for high polling rate mice and the sprint sensitivity fix. The game's files on disk are never changed.
+
+**`InfinitePatch.ps1`** is a PowerShell script, run by `Install.bat` and `Uninstall.bat`. It reads `InfinitePatch.ini` and edits:
 
 | Location | Changes |
 | --- | --- |
@@ -171,9 +200,18 @@ Set `DisableControllers = 1` in `InfinitePatch.ini`, then run `Install.bat` agai
 **I changed the display mode in the game's options**
 The game's own options still work and take priority until you run `Install.bat` again.
 
+**`Install.bat` says `dinput8.dll` belongs to another mod**
+Another mod replaced InfinitePatch's `dinput8.dll`. Remove that mod, then extract the InfinitePatch zip again.
+
+## Building from Source
+
+The native part is built with Visual Studio 2022 or later and its *Desktop development with C++* workload. Run `build.bat`: it produces `Binaries\Win32\dinput8.dll` (32-bit, no runtime to install).
+
 ## Credits
 
 - [PCGamingWiki](https://www.pcgamingwiki.com/wiki/BioShock_Infinite) for documenting many of the game's configuration settings.
+- The [Godot engine team](https://godotengine.org/article/fixing-high-polling-rate-mice-on-windows/) for documenting the high polling rate mouse problem and its fix.
+- [bioshock-infinite-headtracking](https://github.com/itsloopyo/bioshock-infinite-headtracking) by itsloopyo (MIT) for the game's function addresses and engine object layout used by the sprint sensitivity fix.
 - Inspired by [MadnessPatch](https://github.com/Wemino/MadnessPatch) by Wemino.
 
 BioShock Infinite is a trademark of Take-Two Interactive Software, Inc. This project is not affiliated with or endorsed by 2K Games or Take-Two Interactive.
