@@ -1,0 +1,1 @@
+Modern PC fixes for BioShock Infinite: borderless without alt-tab lag, no more crash after the intros on PCs with an integrated GPU, smooth high polling rate mice, same sensitivity when sprinting, UI scaling, FOV up to 105°, intro skip and more. One .ini, one click to apply, one to undo. Open source.

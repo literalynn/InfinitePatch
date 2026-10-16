@@ -1,0 +1,40 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+
+permissions:
+  contents: write # attach the zip to releases
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Build dinput8.dll
+        shell: cmd
+        run: build.bat
+
+      - name: Package
+        shell: pwsh
+        run: |
+          # Same layout as the game folder: extract into it (manual or mod manager)
+          New-Item -ItemType Directory -Path package/Binaries/Win32 | Out-Null
+          Copy-Item Binaries/Win32/dinput8.dll package/Binaries/Win32
+          Copy-Item InfinitePatch.ini, InfinitePatch.ps1, Install.bat, Uninstall.bat -Destination package
+          Compress-Archive -Path package/* -DestinationPath InfinitePatch.zip
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: InfinitePatch
+          path: InfinitePatch.zip
+
+      - name: Attach to release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v3
+        with:
+          files: InfinitePatch.zip

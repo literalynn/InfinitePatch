@@ -1,7 +1,7 @@
 #include <winver.h>
 VS_VERSION_INFO VERSIONINFO
-FILEVERSION 1,1,0,0
-PRODUCTVERSION 1,1,0,0
+FILEVERSION 1,1,1,0
+PRODUCTVERSION 1,1,1,0
 FILETYPE VFT_DLL
 BEGIN
     BLOCK "StringFileInfo"
@@ -10,8 +10,8 @@ BEGIN
         BEGIN
             VALUE "ProductName", "InfinitePatch"
             VALUE "FileDescription", "InfinitePatch native fixes for BioShock Infinite"
-            VALUE "FileVersion", "1.1.0"
-            VALUE "ProductVersion", "1.1.0"
+            VALUE "FileVersion", "1.1.1"
+            VALUE "ProductVersion", "1.1.1"
             VALUE "OriginalFilename", "dinput8.dll"
             VALUE "LegalCopyright", "MIT License - github.com/literalynn/InfinitePatch"
         END

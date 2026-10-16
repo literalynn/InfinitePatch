@@ -12,6 +12,10 @@ A patch that makes the PC version of BioShock Infinite run properly on modern ha
   <a href="LICENSE"><img src="https://img.shields.io/github/license/literalynn/InfinitePatch?style=flat-square&color=16324a" alt="MIT license" /></a>
 </p>
 
+<p align="center">
+  <img src="docs/hero.jpg" width="100%" alt="InfinitePatch over BioShock Infinite's Columbia" />
+</p>
+
 Borderless fullscreen without alt-tab lag, no more crash after the intro videos, no more framerate drops with high polling rate mice, constant mouse sensitivity while sprinting, intro videos skipped, frame cap, VRR, UI scaling, wider FOV and more. Every option can be turned on or off in a simple `.ini` file.
 
 InfinitePatch does **not** modify any game file. It edits the game's settings files and the Windows per-game graphics setting, and adds one small DLL next to the game (`dinput8.dll`) for the fixes that settings can't do. Everything can be turned off and fully uninstalled.
@@ -205,7 +209,7 @@ Another mod replaced InfinitePatch's `dinput8.dll`. Remove that mod, then extrac
 
 ## Building from Source
 
-The native part is built with Visual Studio 2022 or later and its *Desktop development with C++* workload. Run `build.bat`: it produces `Binaries\Win32\dinput8.dll` (32-bit, no runtime to install).
+The native part is built with Visual Studio 2022 or later and its *Desktop development with C++* workload. Run `build.bat`: it produces `Binaries\Win32\dinput8.dll` (32-bit, no runtime to install). Every release zip is built from this code by [GitHub Actions](https://github.com/literalynn/InfinitePatch/actions) when a `v*` tag is pushed.
 
 ## Credits
 
