@@ -1,123 +1,21 @@
-[center][img]https://raw.githubusercontent.com/literalynn/InfinitePatch/main/docs/hero.jpg[/img]
+[size=5][b]InfinitePatch[/b][/size]
+Modern PC fixes for BioShock Infinite, set in one [b].ini[/b] file. No game file is modified.
 
-[size=6][b][color=#c9973f]InfinitePatch[/color][/b][/size]
-[size=4]Modern PC fixes for BioShock Infinite.[/size]
-[size=3]Borderless without alt-tab lag, no more crash after the intros, smooth high polling rate mice, UI scaling, wider FOV and more.
-One [b].ini[/b] to configure, one click to apply, one click to undo.[/size]
-
-[url=https://github.com/literalynn/InfinitePatch][b]Source code on GitHub[/b][/url]  ·  [url=https://github.com/literalynn/InfinitePatch/releases][b]Releases[/b][/url]  ·  [url=https://github.com/literalynn/InfinitePatch/issues][b]Report a bug[/b][/url][/center]
-
-[line]
-
-[size=4][b][color=#c9973f]Why InfinitePatch[/color][/b][/size]
-[list]
-[*][b]Fixes what nothing else does.[/b] The crash after the intro videos on PCs with an integrated GPU, the framerate drops with high polling rate mice, and the camera slowing down when you sprint.
-[*][b]Several mods in one.[/b] Borderless, intro skip, UI scaling, wider FOV and graphics tweaks, all in one place and up to date for Windows 11.
-[*][b]Your settings, not the game.[/b] No game file is modified. It edits the game's settings files and the Windows per-game graphics setting, plus one small [i]dinput8.dll[/i] for the fixes settings can't do.
-[*][b]Fully reversible.[/b] Your original settings are backed up on the first install and [i]Uninstall.bat[/i] puts them back.
-[*][b]Safe by design.[/b] An invalid value in the .ini is rejected with a clear message, and nothing is changed.
-[*][b]Open source (MIT).[/b] Every release is built from the public code by GitHub Actions.
-[/list]
-
-[line]
-
-[center][img]https://raw.githubusercontent.com/literalynn/InfinitePatch/main/docs/nexus/card-01-display.jpg[/img]
-
-[img]https://raw.githubusercontent.com/literalynn/InfinitePatch/main/docs/nexus/card-02-gpu.jpg[/img]
-
-[img]https://raw.githubusercontent.com/literalynn/InfinitePatch/main/docs/nexus/card-03-mouse.jpg[/img]
-
-[img]https://raw.githubusercontent.com/literalynn/InfinitePatch/main/docs/nexus/card-04-resolution.jpg[/img]
-
-[img]https://raw.githubusercontent.com/literalynn/InfinitePatch/main/docs/nexus/card-05-qol.jpg[/img]
-
-[img]https://raw.githubusercontent.com/literalynn/InfinitePatch/main/docs/nexus/card-06-install.jpg[/img][/center]
-
-[line]
-
-[size=4][b][color=#c9973f]Installation[/color][/b][/size]
-[list=1]
-[*][b]Launch the game once, then close it.[/b] It creates its settings files on first launch.
-[*][b]Extract the zip into the game's main folder[/b], the one that contains the [i]Binaries[/i] and [i]XGame[/i] folders. In Steam: right-click the game → [i]Manage[/i] → [i]Browse local files[/i]. This also puts [i]dinput8.dll[/i] in [i]Binaries\Win32[/i].
-[*][b]Double-click Install.bat.[/b]
-[/list]
-[b]Run Install.bat again[/b] every time you edit [i]InfinitePatch.ini[/i], and after Steam updates or verifies the game: the game rebuilds its settings files when its own files change.
-
-If Windows shows a security warning when you run [i]Install.bat[/i], click [i]More info[/i] → [i]Run anyway[/i]. To avoid it, right-click the zip → [i]Properties[/i] → tick [i]Unblock[/i] before extracting.
-
-[b]Mod managers:[/b] install it manually. [i]Install.bat[/i] has to run once to apply your settings, which a mod manager can't do for you.
-
-[size=4][b][color=#c9973f]Configuration[/color][/b][/size]
-Everything lives in [i]InfinitePatch.ini[/i], with a description and the accepted values above each line. Edit it with Notepad, save, run [i]Install.bat[/i] again.
-[spoiler]
-[b]Display[/b]
-[list]
-[*][b]DisplayMode[/b]: 0 windowed, 1 exclusive fullscreen (vanilla), 2 borderless fullscreen (default)
-[*][b]ResolutionX / ResolutionY[/b]: 0 = native resolution of your main monitor, or a size in pixels
-[*][b]VSync[/b]: 0 off, 1 on (caps the game at your refresh rate)
-[*][b]MaxFPS[/b]: 0 no limit, or a framerate limit
-[*][b]UIScale[/b]: 0.0 vanilla to 1.0 full scaling with resolution
-[*][b]FOVSliderRange[/b]: 15 vanilla, 50 = slider up to 105°, up to 100
-[/list]
 [b]Fixes[/b]
 [list]
-[*][b]ForceDedicatedGPU[/b]: runs the game on your graphics card
-[*][b]FixHighPollingRate[/b]: fixes framerate drops with 1000 to 8000 Hz mice
-[*][b]FixSprintSensitivity[/b]: same camera speed when you walk or sprint
-[*][b]WindowedOptimizations[/b]: Windows 11 flip model for borderless (low latency, VRR, instant alt-tab)
-[/list]
-[b]General / Input[/b]
-[list]
-[*][b]SkipIntro2K, SkipIntroIrrational, SkipIntroUnreal, SkipIntroAMD[/b]: skip each intro video
-[*][b]DisableControllers[/b]: ignores all controllers (fixes a spinning camera caused by DS4Windows, ViGEm, vJoy)
-[/list]
-[b]Graphics[/b] (keep the game's setting by default)
-[list]
-[*][b]LensFlares, DepthOfField, MotionBlur, HighQualityLightShafts[/b]: -1 keep, 0 off, 1 on
-[*][b]ShadowResolution[/b]: 0 keep, or 1024 / 2048 / 4096 / 8192 (Ultra is 2048)
-[/list]
-[/spoiler]
-
-[size=4][b][color=#c9973f]Compatibility[/color][/b][/size]
-[list]
-[*][b]Steam version[/b]: made and tested with it. GOG and Epic Games Store use the same game files and should work (the Epic settings folder is detected automatically).
-[*][b]Sprint sensitivity fix[/b]: current Steam build only (May 2022). It turns itself off on any other version.
-[*][b]Other dinput8.dll mods[/b]: can't run at the same time as the native fixes. [i]Install.bat[/i] tells you when that's the case.
-[*][b]Windows 10 and 11[/b]. Windowed game optimizations need Windows 11.
+[*]Borderless fullscreen at your native resolution: no alt-tab lag, low latency and VRR on Windows 11
+[*]No more crash after the intro videos on PCs with an integrated GPU (Ryzen 7000/9000, Intel)
+[*]No framerate drops with 1000 to 8000 Hz mice, same mouse sensitivity when sprinting
+[*]UI scaling for 1440p and 4K, FOV slider up to 105°
+[*]Intro videos skipped, VSync or FPS cap, optional graphics tweaks (shadows, depth of field, motion blur)
 [/list]
 
-[size=4][b][color=#c9973f]Uninstall[/color][/b][/size]
-Double-click [i]Uninstall.bat[/i]. It removes [i]dinput8.dll[/i] and restores the settings files and the Windows graphics setting saved during the first install. You can then delete the remaining InfinitePatch files from the game folder.
-
-[line]
-
-[size=4][b][color=#c9973f]Troubleshooting[/color][/b][/size]
-[spoiler]
-[b]The game crashes on startup[/b]
-Close overlay and monitoring tools before launching the game: MSI Afterburner / RivaTuner Statistics Server, the NVIDIA overlay and the Discord overlay.
-
-[b]My settings went back to default[/b]
-The game rebuilds its settings files after an update or a file verification on Steam. Run [i]Install.bat[/i] again.
-
-[b]"Game settings not found"[/b]
-Launch the game once, close it, then run [i]Install.bat[/i] again.
-
-[b]The camera spins on its own, or I see Xbox buttons with a keyboard and mouse[/b]
-Set [i]DisableControllers = 1[/i] in [i]InfinitePatch.ini[/i], then run [i]Install.bat[/i] again.
-
-[b]I changed the display mode in the game's options[/b]
-The game's own options still work and take priority until you run [i]Install.bat[/i] again.
-[/spoiler]
-
-[b]Found a bug?[/b] Use the Bugs tab or [url=https://github.com/literalynn/InfinitePatch/issues]GitHub issues[/url], with your Windows version, GPU and what happened.
-
-[line]
-
-[size=4][b][color=#c9973f]Credits[/color][/b][/size]
-[list]
-[*][url=https://www.pcgamingwiki.com/wiki/BioShock_Infinite]PCGamingWiki[/url] for documenting many of the game's configuration settings
-[*]Inspired by [url=https://github.com/Wemino/MadnessPatch]MadnessPatch[/url] by Wemino
-[*]The high polling rate fix uses the same approach as [url=https://godotengine.org/article/fixing-high-polling-rate-mice-on-windows/]Godot's fix[/url] for this problem
+[b]Install[/b]
+[list=1]
+[*]Launch the game once, then close it.
+[*]Extract the zip into the game folder (the one with [i]Binaries[/i] and [i]XGame[/i]).
+[*]Run [i]Install.bat[/i]. Run it again after editing [i]InfinitePatch.ini[/i] or after a Steam update.
 [/list]
+[i]Uninstall.bat[/i] restores your original settings.
 
-[center][size=2]BioShock Infinite is a trademark of Take-Two Interactive Software, Inc. InfinitePatch is not affiliated with or endorsed by 2K Games or Take-Two Interactive.[/size][/center]
+Source code and full documentation: [url=https://github.com/literalynn/InfinitePatch]github.com/literalynn/InfinitePatch[/url]
